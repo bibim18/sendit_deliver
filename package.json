@@ -1,0 +1,20 @@
+{
+  "name": "sendit_deliver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.4.1",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.3.0",
+    "mysql2": "^1.5.1",
+    "sequelize": "^4.28.6",
+    "sequelize-cli": "^3.2.0"
+  }
+}
