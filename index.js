@@ -13,10 +13,6 @@ const sql = new db ('sendit_deliver','root','12345678', {
     dialect : 'mysql'
 })
 
-// sql.query("Select * from company", { type: sql.QueryTypes.SELECT }).then(myTableRows => {
-//     console.log(myTableRows);
-// })
-
 //company
 const company = sql.define('company',{
         companyID: {
@@ -114,7 +110,7 @@ console.log(licensePlate,hourCar,weight,typeCarID)
 let data = await car.create({licensePlate,hourCar,weight,typeCarID })
 ctx.body = data
 })
-//end typeCar
+//end car
 
 //deliversend
 const deliversend = sql.define('deliversend',{
@@ -165,6 +161,7 @@ ctx.body = data
  typeCar.hasMany(car,{foreignKey: 'typeCarID'});
  car.belongsTo(typeCar,{foreignKey: 'typeCarID'});  
 
+ //showQuery
 router.get('/showR', async(ctx) => {
     let data = await deliversend.findAll(
        {
