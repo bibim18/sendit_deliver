@@ -24,55 +24,63 @@ conn.typeCar = require('./models/typeCar.js')(sql, db);
 conn.deliversend = require('./models/deliverSend.js')(sql, db);
 
 //company
-router.get('/comp',async(ctx)=>{
-    let date = await conn.company.findAll()
-    ctx.body = date
-})
-router.post('/comp', async(ctx) => {
-    const {nameCompany} = ctx.request.body
-    console.log(nameCompany)
-    let data = await conn.company.create({nameCompany })
-    ctx.body = data
-  })
+    //select * from company
+    router.get('/comp',async(ctx)=>{
+        let date = await conn.company.findAll()
+        ctx.body = date
+    })
+    //insert into company (nameCompany) values (value from JSON)
+    router.post('/comp', async(ctx) => {
+        const {nameCompany} = ctx.request.body
+        console.log(nameCompany)
+        let data = await conn.company.create({nameCompany })
+        ctx.body = data
+    })
 //end company
 
 //typeCar
-router.get('/typec',async(ctx)=>{
-let data = await conn.typeCar.findAll()
-ctx.body = data
-})
-router.post('/typec', async(ctx) => {
-const {nameTypeCar} = ctx.request.body
-console.log(nameTypeCar)
-let data = await conn.typeCar.create({nameTypeCar })
-ctx.body = data
-})
+    //select * from typeCar
+    router.get('/typec',async(ctx)=>{
+    let data = await conn.typeCar.findAll()
+    ctx.body = data
+    })
+    //insert into typeCar (nameTypeCar) values (value from JSON)
+    router.post('/typec', async(ctx) => {
+    const {nameTypeCar} = ctx.request.body
+    console.log(nameTypeCar)
+    let data = await conn.typeCar.create({nameTypeCar })
+    ctx.body = data
+    })
 //end typeCar
  
 //car
-router.get('/car',async(ctx)=>{
-let data = await conn.car.findAll()
-ctx.body = data
-})
-router.post('/car', async(ctx) => {
-const {licensePlate,hourCar,weight,typeCarID} = ctx.request.body
-console.log(licensePlate,hourCar,weight,typeCarID)
-let data = await conn.car.create({licensePlate,hourCar,weight,typeCarID })
-ctx.body = data
-})
+    //select * from car
+    router.get('/car',async(ctx)=>{
+    let data = await conn.car.findAll()
+    ctx.body = data
+    })
+    //insert into car (licensePlate,hourCar,weight,typeCarID) values (value from JSON)
+    router.post('/car', async(ctx) => {
+    const {licensePlate,hourCar,weight,typeCarID} = ctx.request.body
+    console.log(licensePlate,hourCar,weight,typeCarID)
+    let data = await conn.car.create({licensePlate,hourCar,weight,typeCarID })
+    ctx.body = data
+    })
 //end car
 
 //deliversend
-router.get('/deliver',async(ctx)=>{
-let data = await conn.deliversend.findAll()
-ctx.body = data
-})
-router.post('/deliver', async(ctx) => {
-const {dateSend,capacity,companyID,carID} = ctx.request.body
-console.log(dateSend,capacity,companyID,carID)
-let data = await conn.deliversend.create({dateSend,capacity,companyID,carID})
-ctx.body = data
-})
+    //select * from deliverSend
+    router.get('/deliver',async(ctx)=>{
+    let data = await conn.deliversend.findAll()
+    ctx.body = data
+    })
+    //insert into deliverSent (dateSend,capacity,companyID,carID) values (value from JSON)
+    router.post('/deliver', async(ctx) => {
+    const {dateSend,capacity,companyID,carID} = ctx.request.body
+    console.log(dateSend,capacity,companyID,carID)
+    let data = await conn.deliversend.create({dateSend,capacity,companyID,carID})
+    ctx.body = data
+    })
 //end deliversend
 
 //association
@@ -84,6 +92,10 @@ ctx.body = data
  conn.car.belongsTo(conn.typeCar,{foreignKey: 'typeCarID'});  
 
 //showQuery
+    // select * from deliversend
+    // join company using (companyID) 
+    // join car using (carID)
+    // join typeCar using (typeCarID);
 router.get('/showR', async(ctx) => {
     let data = await conn.deliversend.findAll(
        {
