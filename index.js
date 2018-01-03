@@ -14,8 +14,8 @@ const sql = new db ('sendit_deliver','root','12345678', {
 })
 
 const conn = {};
-conn.db = db;  
-conn.sql = sql;
+conn.db = db;  //db is sequelize
+conn.sql = sql; //sql is connect to database mysql
 
 //Models/tables
 conn.car = require('./models/car.js')(sql, db);  
@@ -96,6 +96,8 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
     // join company using (companyID) 
     // join car using (carID)
     // join typeCar using (typeCarID);
+
+//obj of operation   
 const Op = db.Op; 
 
 router.get('/showR', async(ctx) => {
@@ -145,7 +147,7 @@ router.post('/showR', async(ctx) => {
                      }
                     ],
                     attributes: ['licensePlate','weight'],
-                        where:{ 
+                        where:{ //ระหว่าง
                             weight: {[Op.between]: [strweight, endweight]}
                         } 
                  }
