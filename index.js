@@ -96,10 +96,12 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
     // join company using (companyID) 
     // join car using (carID)
     // join typeCar using (typeCarID);
+const Op = db.Op; 
+
 router.get('/showR', async(ctx) => {
     let data = await conn.deliversend.findAll(
        {
-            include: [ //join 
+             include: [ //join 
                 {
                     model: conn.company,
                     attributes: ['nameCompany']
@@ -112,15 +114,49 @@ router.get('/showR', async(ctx) => {
                         attributes: ['nameTypeCar']
                     }
                    ],
-                   attributes: ['licensePlate','weight']
+                   attributes: ['licensePlate','weight'],
+                   //where:{ [Op.or]: [{weight: 1300}, {weight: 1500}]}
                 }
             ],
             attributes: ['dateSend','capacity']
+            
         }
     )
     ctx.body = data
 }
 )
 //end showQuery
+router.post('/showR', async(ctx) => {
+    const {strweight,endweight,strcap,endcap} = ctx.request.body
+    console.log(strweight,endweight,strcap,endcap)
+    let data = await conn.deliversend.findAll(
+        {
+              include: [ //join 
+                 {
+                     model: conn.company,
+                     attributes: ['nameCompany']
+                 },
+                { 
+                    model: conn.car,
+                    include: [ //join
+                     { 
+                         model: conn.typeCar,
+                         attributes: ['nameTypeCar']
+                     }
+                    ],
+                    attributes: ['licensePlate','weight'],
+                        where:{ 
+                            weight: {[Op.between]: [strweight, endweight]}
+                        } 
+                 }
+             ],
+             attributes: ['dateSend','capacity'],
+             where:{ 
+                capacity: {[Op.between]: [strcap, endcap]}
+                }
+         }
+     )
+     ctx.body = data
+    })
 
 app.listen(3000);
