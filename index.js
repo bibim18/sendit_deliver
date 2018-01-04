@@ -1,10 +1,12 @@
 const db = require('sequelize')
 const koa = require('koa');
+const cors = require('koa-cors');
 const body = require('koa-bodyparser');
 const route = require('koa-router');
 const app = new koa();
 const router = new route();
 
+app.use(cors());
 app.use(body())
 app.use(router.allowedMethods())
 app.use(router.routes())
@@ -120,7 +122,10 @@ router.get('/showR', async(ctx) => {
                    //where:{ [Op.or]: [{weight: 1300}, {weight: 1500}]}
                 }
             ],
-            attributes: ['dateSend','capacity']
+            attributes: ['dateSend','capacity'],
+            //pagination จัดให้มี 7 rows/page
+            limit:7,
+            offset:0
             
         }
     )
@@ -128,37 +133,5 @@ router.get('/showR', async(ctx) => {
 }
 )
 //end showQuery
-router.post('/showR', async(ctx) => {
-    const {strweight,endweight,strcap,endcap} = ctx.request.body
-    console.log(strweight,endweight,strcap,endcap)
-    let data = await conn.deliversend.findAll(
-        {
-              include: [ //join 
-                 {
-                     model: conn.company,
-                     attributes: ['nameCompany']
-                 },
-                { 
-                    model: conn.car,
-                    include: [ //join
-                     { 
-                         model: conn.typeCar,
-                         attributes: ['nameTypeCar']
-                     }
-                    ],
-                    attributes: ['licensePlate','weight'],
-                        where:{ //ระหว่าง
-                            weight: {[Op.between]: [strweight, endweight]}
-                        } 
-                 }
-             ],
-             attributes: ['dateSend','capacity'],
-             where:{ 
-                capacity: {[Op.between]: [strcap, endcap]}
-                }
-         }
-     )
-     ctx.body = data
-    })
 
 app.listen(3000);
