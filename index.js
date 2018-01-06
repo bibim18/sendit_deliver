@@ -11,6 +11,7 @@ app.use(body())
 app.use(router.allowedMethods())
 app.use(router.routes())
 
+
 const sql = new db ('sendit_deliver','root','12345678', {
     dialect : 'mysql'
 })
@@ -42,12 +43,12 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
 
 //typeCar
     //select * from typeCar
-    router.get('/typec',async(ctx)=>{
+    router.get('/typeCar',async(ctx)=>{
     let data = await conn.typeCar.findAll()
     ctx.body = data
     })
     //insert into typeCar (nameTypeCar) values (value from JSON)
-    router.post('/typec', async(ctx) => {
+    router.post('/typeCar', async(ctx) => {
     const {nameTypeCar} = ctx.request.body
     console.log(nameTypeCar)
     let data = await conn.typeCar.create({nameTypeCar })
@@ -102,7 +103,14 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
 //obj of operation   
 const Op = db.Op; 
 
-router.get('/showR', async(ctx) => {
+router.get('/vehical/:page', async(ctx) => {
+    let tt = ctx.params.page
+    let gg = parseInt(tt) //แปลง string เป็น integer
+    let strweight = parseInt(ctx.request.query.strweight)
+    let endweight = parseInt(ctx.request.query.endweight)
+    let strcapacity = parseInt(ctx.request.query.strcapacity)
+    let endcapacity = parseInt(ctx.request.query.endcapacity)
+    console.log(strweight+endweight+strcapacity+endcapacity)
     let data = await conn.deliversend.findAll(
        {
              include: [ //join 
@@ -119,19 +127,31 @@ router.get('/showR', async(ctx) => {
                     }
                    ],
                    attributes: ['licensePlate','weight'],
-                   //where:{ [Op.or]: [{weight: 1300}, {weight: 1500}]}
+                   where:{ //ระหว่าง
+                    weight: (strweight && endweight) ? {[Op.between]: [strweight, endweight]} : {[Op.between]: [1300, 1500]}
+                }
                 }
             ],
             attributes: ['dateSend','capacity'],
+            where:{ 
+                capacity: (strcapacity && endcapacity) ? {[Op.between]: [strcapacity, endcapacity]} : {[Op.between]: [380, 500]}
+            },
             //pagination จัดให้มี 7 rows/page
             limit:7,
-            offset:0
-            
-        }
-    )
+            offset : 7*(gg-1)
+        })
     ctx.body = data
-}
-)
+})
 //end showQuery
+
+router.get('/test/:page', async(ctx) => {
+
+    ctx.body = {
+        params: ctx.params, //page
+        querystring: ctx.request.query, //after ? in localhost:3000/showR/0?a=44
+        data: ctx.request.data    //data in body    
+    }
+})
+
 
 app.listen(3000);
