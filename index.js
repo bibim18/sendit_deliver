@@ -28,9 +28,9 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
 
 //company
     //select * from company
-    router.get('/comp',async(ctx)=>{
-        let date = await conn.company.findAll()
-        ctx.body = date
+    router.get('/comp', async(ctx) => {
+        let data = await conn.company.findAll()
+        ctx.body = data
     })
     //insert into company (nameCompany) values (value from JSON)
     router.post('/comp', async(ctx) => {
@@ -43,7 +43,7 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
 
 //typeCar
     //select * from typeCar
-    router.get('/typeCar',async(ctx)=>{
+    router.get('/typeCar', async(ctx) => {
     let data = await conn.typeCar.findAll()
     ctx.body = data
     })
@@ -58,7 +58,7 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
  
 //car
     //select * from car
-    router.get('/car',async(ctx)=>{
+    router.get('/car',async(ctx) => {
     let data = await conn.car.findAll()
     ctx.body = data
     })
@@ -73,7 +73,7 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
 
 //deliversend
     //select * from deliverSend
-    router.get('/deliver',async(ctx)=>{
+    router.get('/deliver',async(ctx) => {
     let data = await conn.deliversend.findAll()
     ctx.body = data
     })
@@ -103,7 +103,7 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
 //obj of operation   
 const Op = db.Op; 
 
-router.get('/vehical/:page', async(ctx) => {
+router.get('/vehical', async(ctx) => {
     let tt = ctx.params.page
     let gg = parseInt(tt) //แปลง string เป็น integer
     let strweight = parseInt(ctx.request.query.strweight)
@@ -126,19 +126,19 @@ router.get('/vehical/:page', async(ctx) => {
                         attributes: ['nameTypeCar']
                     }
                    ],
-                   attributes: ['licensePlate','weight'],
-                   where:{ //ระหว่าง
-                    weight: (strweight && endweight) ? {[Op.between]: [strweight, endweight]} : {[Op.between]: [1300, 1500]}
-                }
+                   attributes: ['licensePlate','hourCar','weight'],
+                   // where:{ //ระหว่าง
+                   //  weight: (strweight && endweight) ? {[Op.between]: [strweight, endweight]} : {[Op.between]: [1300, 1500]}
+                   //  }
                 }
             ],
             attributes: ['dateSend','capacity'],
-            where:{ 
-                capacity: (strcapacity && endcapacity) ? {[Op.between]: [strcapacity, endcapacity]} : {[Op.between]: [380, 500]}
-            },
+            // where:{ 
+            //     capacity: (strcapacity && endcapacity) ? {[Op.between]: [strcapacity, endcapacity]} : {[Op.between]: [380, 500]}
+            // },
             //pagination จัดให้มี 7 rows/page
-            limit:7,
-            offset : 7*(gg-1)
+            // limit:7,
+            // offset : 7*(gg-1)
         })
     ctx.body = data
 })
