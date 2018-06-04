@@ -22,6 +22,14 @@ module.exports = (sequelize, DataTypes) => {
         typeCarID : {
             type: DataTypes.INTEGER,
             allowNull:true
+        },
+        fuelType : {
+            type: DataTypes.STRING,
+            allowNull:true
+        },
+        brand : {
+            type: DataTypes.STRING,
+            allowNull:true
         }
     },{
         tableName: 'car',

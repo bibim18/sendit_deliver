@@ -26,6 +26,12 @@ module.exports = {
             key: 'typeCarID'
         }
       },
+      fuelType: {
+        type: Sequelize.STRING
+      },
+      brand: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

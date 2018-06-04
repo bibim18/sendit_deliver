@@ -8,8 +8,6 @@ const router = new route();
 
 app.use(cors());
 app.use(body())
-app.use(router.allowedMethods())
-app.use(router.routes())
 
 
 const sql = new db ('sendit_deliver','root','12345678', {
@@ -32,11 +30,10 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
         let data = await conn.company.findAll()
         ctx.body = data
     })
-    //insert into company (nameCompany) values (value from JSON)
-    router.post('/comp', async(ctx) => {
-        const {nameCompany} = ctx.request.body
-        console.log(nameCompany)
-        let data = await conn.company.create({nameCompany })
+     router.post('/comp', async(ctx) => {
+        const {licensePlate, } = ctx.request.body
+        console.log(licensePlate)
+        let data = await conn.car.create({licensePlate })
         ctx.body = data
     })
 //end company
@@ -44,47 +41,39 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
 //typeCar
     //select * from typeCar
     router.get('/typeCar', async(ctx) => {
-    let data = await conn.typeCar.findAll()
-    ctx.body = data
-    })
-    //insert into typeCar (nameTypeCar) values (value from JSON)
-    router.post('/typeCar', async(ctx) => {
-    const {nameTypeCar} = ctx.request.body
-    console.log(nameTypeCar)
-    let data = await conn.typeCar.create({nameTypeCar })
-    ctx.body = data
+        let data = await conn.typeCar.findAll()
+        ctx.body = data
     })
 //end typeCar
  
 //car
     //select * from car
     router.get('/car',async(ctx) => {
-    let data = await conn.car.findAll()
-    ctx.body = data
-    })
-    //insert into car (licensePlate,hourCar,weight,typeCarID) values (value from JSON)
-    router.post('/car', async(ctx) => {
-    const {licensePlate,hourCar,weight,typeCarID} = ctx.request.body
-    console.log(licensePlate,hourCar,weight,typeCarID)
-    let data = await conn.car.create({licensePlate,hourCar,weight,typeCarID })
-    ctx.body = data
+        let data = await conn.car.findAll()
+        ctx.body = data
     })
 //end car
 
 //deliversend
     //select * from deliverSend
     router.get('/deliver',async(ctx) => {
-    let data = await conn.deliversend.findAll()
-    ctx.body = data
-    })
-    //insert into deliverSent (dateSend,capacity,companyID,carID) values (value from JSON)
-    router.post('/deliver', async(ctx) => {
-    const {dateSend,capacity,companyID,carID} = ctx.request.body
-    console.log(dateSend,capacity,companyID,carID)
-    let data = await conn.deliversend.create({dateSend,capacity,companyID,carID})
-    ctx.body = data
+        let data = await conn.deliversend.findAll()
+        ctx.body = data
     })
 //end deliversend
+
+//insert new vehicel
+    router.post('/new', async(ctx) => {
+        const {licensePlate,hourCar,weight,typeCarID,fuelType,brand, dateSend, capacity, companyID, carID  } = ctx.request.body
+        console.log("licensePlate 1 = ",licensePlate)
+        let data = await conn.car.create({ licensePlate, hourCar, weight, typeCarID, fuelType, brand })
+         console.log("licensePlate 2 = ",licensePlate)
+        let IDcar = await conn.car.findOne({"where": {"licensePlate":licensePlate}})
+
+        data = await conn.deliversend.create({ "dateSend":dateSend,"capacity":capacity,"companyID":companyID,"carID":IDcar.carID })
+      ctx.body = data
+    })
+//end insert new vehicel
 
 //association
  conn.company.hasMany(conn.deliversend,{foreignKey: 'companyID'});  
@@ -103,14 +92,10 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
 //obj of operation   
 const Op = db.Op; 
 
-router.get('/vehical', async(ctx) => {
+router.get('/vehical/:page', async(ctx) => {
     let tt = ctx.params.page
     let gg = parseInt(tt) //แปลง string เป็น integer
-    let strweight = parseInt(ctx.request.query.strweight)
-    let endweight = parseInt(ctx.request.query.endweight)
-    let strcapacity = parseInt(ctx.request.query.strcapacity)
-    let endcapacity = parseInt(ctx.request.query.endcapacity)
-    console.log(strweight+endweight+strcapacity+endcapacity)
+     console.log(tt)
     let data = await conn.deliversend.findAll(
        {
              include: [ //join 
@@ -127,31 +112,46 @@ router.get('/vehical', async(ctx) => {
                     }
                    ],
                    attributes: ['licensePlate','hourCar','weight'],
-                   // where:{ //ระหว่าง
-                   //  weight: (strweight && endweight) ? {[Op.between]: [strweight, endweight]} : {[Op.between]: [1300, 1500]}
-                   //  }
                 }
             ],
             attributes: ['dateSend','capacity'],
-            // where:{ 
-            //     capacity: (strcapacity && endcapacity) ? {[Op.between]: [strcapacity, endcapacity]} : {[Op.between]: [380, 500]}
-            // },
             //pagination จัดให้มี 7 rows/page
-            // limit:7,
-            // offset : 7*(gg-1)
+            limit:7,
+            offset : 7*(gg-1)
         })
     ctx.body = data
 })
-//end showQuery
+//end vahicel
 
-router.get('/test/:page', async(ctx) => {
+router.get('/vehical', async(ctx) => {
+    let tt = ctx.params.page
+    let gg = parseInt(tt) //แปลง string เป็น integer
 
-    ctx.body = {
-        params: ctx.params, //page
-        querystring: ctx.request.query, //after ? in localhost:3000/showR/0?a=44
-        data: ctx.request.data    //data in body    
-    }
+    let data = await conn.deliversend.findAll(
+       {
+             include: [ //join 
+                {
+                    model: conn.company,
+                    attributes: ['nameCompany']
+                },
+               { 
+                   model: conn.car,
+                   include: [ //join
+                    { 
+                        model: conn.typeCar,
+                        attributes: ['nameTypeCar']
+                    }
+                   ],
+                   attributes: ['licensePlate','hourCar','weight'],
+                }
+            ],
+            attributes: ['dateSend','capacity'],
+        })
+        console.log(data)
+    ctx.body = data
 })
+//end vahicel
+app.use(router.routes())
+app.use(router.allowedMethods())
 
-
-app.listen(3000);
+app.listen(5000);
