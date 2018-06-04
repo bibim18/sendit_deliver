@@ -65,9 +65,7 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
 //insert new vehicel
     router.post('/new', async(ctx) => {
         const {licensePlate,hourCar,weight,typeCarID,fuelType,brand, dateSend, capacity, companyID, carID  } = ctx.request.body
-        console.log("licensePlate 1 = ",licensePlate)
         let data = await conn.car.create({ licensePlate, hourCar, weight, typeCarID, fuelType, brand })
-         console.log("licensePlate 2 = ",licensePlate)
         let IDcar = await conn.car.findOne({"where": {"licensePlate":licensePlate}})
 
         data = await conn.deliversend.create({ "dateSend":dateSend,"capacity":capacity,"companyID":companyID,"carID":IDcar.carID })
@@ -124,9 +122,6 @@ router.get('/vehical/:page', async(ctx) => {
 //end vahicel
 
 router.get('/vehical', async(ctx) => {
-    let tt = ctx.params.page
-    let gg = parseInt(tt) //แปลง string เป็น integer
-
     let data = await conn.deliversend.findAll(
        {
              include: [ //join 
@@ -147,10 +142,18 @@ router.get('/vehical', async(ctx) => {
             ],
             attributes: ['dateSend','capacity'],
         })
-        console.log(data)
     ctx.body = data
 })
 //end vahicel
+
+router.post('/edit/:id',async(ctx) => {
+    const {licensePlate,hourCar,weight,typeCarID,fuelType,brand, dateSend, capacity, companyID, carID  } = ctx.request.body
+    let deliverId = ctx.params.id
+    let IDcar = await conn.car.findOne({"where": {"licensePlate":licensePlate}})
+    let data = await conn.car.update({ licensePlate, hourCar, weight, typeCarID, fuelType, brand },{where : {"carID":IDcar.carID}})
+        data = await conn.deliversend.update({dateSend,capacity,companyID,"carID":IDcar.carID },{where : {"detailSendID":deliverId}})
+  ctx.body = data
+})
 app.use(router.routes())
 app.use(router.allowedMethods())
 
