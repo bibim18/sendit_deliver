@@ -155,7 +155,8 @@ router.post('/edit/:id',async(ctx) => {
             try{let idDeliver = await conn.deliversend.findOne({"where" : {detailSendID : deliverId}})
                 let data = await conn.car.update({ licensePlate, hourCar, weight, typeCarID, fuelType, brand },{where : {"carID":idDeliver.carID}})
                 data = await conn.deliversend.update({dateSend,capacity,companyID,"carID":idDeliver.carID },{where : {"detailSendID":deliverId}})
-           }catch(err) {
+                ctx.body = data
+            }catch(err) {
                 ctx.status = 404;
                 ctx.body = "PK DeliverSend " + deliverId + " is not found"
             }
