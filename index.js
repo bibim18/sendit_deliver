@@ -137,7 +137,7 @@ router.get('/vehical', async(ctx) => {
                         attributes: ['nameTypeCar']
                     }
                    ],
-                   attributes: ['licensePlate','hourCar','weight'],
+                   attributes: ['licensePlate','hourCar','weight','fuelType','brand'],
                 }
             ],
             attributes: ['dateSend','capacity'],
