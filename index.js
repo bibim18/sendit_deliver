@@ -119,7 +119,7 @@ router.get('/vehical/:page', async(ctx) => {
         })
     ctx.body = data
 })
-//end vahicel
+//end vahicel pagination
 
 router.get('/vehical', async(ctx) => {
     let data = await conn.deliversend.findAll(
@@ -144,15 +144,26 @@ router.get('/vehical', async(ctx) => {
         })
     ctx.body = data
 })
-//end vahicel
+//end vahicel all
 
 router.post('/edit/:id',async(ctx) => {
     const {licensePlate,hourCar,weight,typeCarID,fuelType,brand, dateSend, capacity, companyID, carID  } = ctx.request.body
     let deliverId = ctx.params.id
-    let IDcar = await conn.car.findOne({"where": {"licensePlate":licensePlate}})
-    let data = await conn.car.update({ licensePlate, hourCar, weight, typeCarID, fuelType, brand },{where : {"carID":IDcar.carID}})
-        data = await conn.deliversend.update({dateSend,capacity,companyID,"carID":IDcar.carID },{where : {"detailSendID":deliverId}})
-  ctx.body = data
+    let checkId = await conn.deliversend.findOne({"where" : {detailSendID : deliverId}})
+    
+        if(weight != 0){
+            try{let idDeliver = await conn.deliversend.findOne({"where" : {detailSendID : deliverId}})
+                let data = await conn.car.update({ licensePlate, hourCar, weight, typeCarID, fuelType, brand },{where : {"carID":idDeliver.carID}})
+                data = await conn.deliversend.update({dateSend,capacity,companyID,"carID":idDeliver.carID },{where : {"detailSendID":deliverId}})
+           }catch(err) {
+                ctx.status = 404;
+                ctx.body = "PK DeliverSend " + deliverId + " is not found"
+            }
+        }else {
+            ctx.status = 404;
+            ctx.body = "weight not 0"
+        }
+    
 })
 //end edit
 app.use(router.routes())
