@@ -10,6 +10,8 @@ module.exports = {
       typeCarID: 1,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Diesel',
+      brand : 'Isuzu'
   },
   {
       licensePlate: '3กย-1122',
@@ -18,6 +20,8 @@ module.exports = {
       typeCarID: 1,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Diesel',
+      brand : 'Isuzu'
   },
   {
       licensePlate: '3กย-1123',
@@ -26,6 +30,8 @@ module.exports = {
       typeCarID: 1,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Diesel',
+      brand : 'Toyota'
   },
   {
       licensePlate: '3กย-1124',
@@ -34,6 +40,8 @@ module.exports = {
       typeCarID: 1,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Gasoline',
+      brand : 'Toyota'
   },
   {
       licensePlate: '3กย-1125',
@@ -42,6 +50,8 @@ module.exports = {
       typeCarID: 1,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Gasoline',
+      brand : 'Ford'
   },
   {
       licensePlate: '3กย-1126',
@@ -50,6 +60,8 @@ module.exports = {
       typeCarID: 2,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Methanol',
+      brand : 'Ford'
   },
   {
       licensePlate: '3กย-1127',
@@ -58,6 +70,8 @@ module.exports = {
       typeCarID: 2,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Methanol',
+      brand : 'Honda'
   },
   {
       licensePlate: '3กย-1128',
@@ -66,6 +80,8 @@ module.exports = {
       typeCarID: 2,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Natural Gas',
+      brand : 'Honda'
   },
   {
       licensePlate: '3กย-1129',
@@ -74,6 +90,8 @@ module.exports = {
       typeCarID: 2,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Natural Gas',
+      brand : 'Volvo'
   },
   {
 
@@ -83,6 +101,8 @@ module.exports = {
       typeCarID: 2,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Hydrogen',
+      brand : 'Volvo'
   },
   {
 
@@ -92,6 +112,8 @@ module.exports = {
       typeCarID: 2,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Hydrogen',
+      brand : 'Kenworth'
   },
   {
       licensePlate: 'กย-1122',
@@ -100,6 +122,8 @@ module.exports = {
       typeCarID: 2,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Hydrogen',
+      brand : 'Kenworth'
   },
   {
       licensePlate: 'กย-1123',
@@ -108,6 +132,8 @@ module.exports = {
       typeCarID: 2,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Biodiesel',
+      brand : 'Kenworth'
   },
   {
       licensePlate: 'กย-1124',
@@ -116,6 +142,8 @@ module.exports = {
       typeCarID: 2,
       createdAt : new Date(),
       updatedAt : new Date(),
+      fuelType : 'Biodiesel',
+      brand : 'Honda'
   }]
     , {});
   },

@@ -154,6 +154,7 @@ router.post('/edit/:id',async(ctx) => {
         data = await conn.deliversend.update({dateSend,capacity,companyID,"carID":IDcar.carID },{where : {"detailSendID":deliverId}})
   ctx.body = data
 })
+//end edit
 app.use(router.routes())
 app.use(router.allowedMethods())
 
