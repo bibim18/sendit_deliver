@@ -64,11 +64,12 @@ conn.deliversend = require('./models/deliverSend.js')(sql, db);
 
 //insert new vehicel
     router.post('/new', async(ctx) => {
+        let countdeliver = await conn.deliversend.findAndCountAll()
         const {licensePlate,hourCar,weight,typeCarID,fuelType,brand, dateSend, capacity, companyID, carID  } = ctx.request.body
         let data = await conn.car.create({ licensePlate, hourCar, weight, typeCarID, fuelType, brand })
         let IDcar = await conn.car.findOne({"where": {"licensePlate":licensePlate}})
 
-        data = await conn.deliversend.create({ "dateSend":dateSend,"capacity":capacity,"companyID":companyID,"carID":IDcar.carID })
+        data = await conn.deliversend.create({ "detailSendID" : countdeliver.count+1,"dateSend":dateSend,"capacity":capacity,"companyID":companyID,"carID":IDcar.carID })
       ctx.body = data
     })
 //end insert new vehicel
@@ -152,7 +153,7 @@ router.post('/edit/:id',async(ctx) => {
     let deliverId = ctx.params.id
     let checkId = await conn.deliversend.findOne({"where" : {detailSendID : deliverId}})
     
-        if(weight > 0){
+        if(weight > 0 || capacity >0 ){
             try{let idDeliver = await conn.deliversend.findOne({"where" : {detailSendID : deliverId}})
                 let data = await conn.car.update({ licensePlate, hourCar, weight, typeCarID, fuelType, brand },{where : {"carID":idDeliver.carID}})
                 data = await conn.deliversend.update({dateSend,capacity,companyID,"carID":idDeliver.carID },{where : {"detailSendID":deliverId}})
