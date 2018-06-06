@@ -94,8 +94,7 @@ router.get('/vehical/:page', async(ctx) => {
     let tt = ctx.params.page
     let gg = parseInt(tt) //แปลง string เป็น integer
      console.log(tt)
-    let data = await conn.deliversend.findAll(
-       {
+    let data = await conn.deliversend.findAll({
              include: [ //join 
                 {
                     model: conn.company,
@@ -115,7 +114,8 @@ router.get('/vehical/:page', async(ctx) => {
             attributes: ['dateSend','capacity'],
             //pagination จัดให้มี 7 rows/page
             limit:7,
-            offset : 7*(gg-1)
+            offset : 7*(gg-1),
+            order : ['detailSendId']
         })
     ctx.body = data
 })
@@ -141,6 +141,7 @@ router.get('/vehical', async(ctx) => {
                 }
             ],
             attributes: ['dateSend','capacity'],
+            order : ['detailSendID']
         })
     ctx.body = data
 })
@@ -151,7 +152,7 @@ router.post('/edit/:id',async(ctx) => {
     let deliverId = ctx.params.id
     let checkId = await conn.deliversend.findOne({"where" : {detailSendID : deliverId}})
     
-        if(weight != 0){
+        if(weight > 0){
             try{let idDeliver = await conn.deliversend.findOne({"where" : {detailSendID : deliverId}})
                 let data = await conn.car.update({ licensePlate, hourCar, weight, typeCarID, fuelType, brand },{where : {"carID":idDeliver.carID}})
                 data = await conn.deliversend.update({dateSend,capacity,companyID,"carID":idDeliver.carID },{where : {"detailSendID":deliverId}})
@@ -162,7 +163,7 @@ router.post('/edit/:id',async(ctx) => {
             }
         }else {
             ctx.status = 404;
-            ctx.body = "weight not 0"
+            ctx.body = "weight more than 0"
         }
     
 })
